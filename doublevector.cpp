@@ -1,6 +1,6 @@
 /**
  * @file doublevector.cpp
- * @author  Luis Estevam Rosa Chaves (536699), Gustavo Henrique Freitas de Sousa (535735)
+ * @authors Luis Estevam Rosa Chaves (536699), Gustavo Henrique Freitas de Sousa (535735)
  * @brief 
  * @date 2023-06-08
  * 
@@ -43,7 +43,14 @@ int DoubleVector::size(){
 }
 
 void DoubleVector::push_back(int value){
+  if(this->m_tail >= this->size()) {
+    resize();
+  }
 
+  int new_index = ++ m_tail;
+  this->m_list[new_index] = value;
+
+  this->m_size ++;
 }
 
 int DoubleVector::pop_back(){
@@ -51,11 +58,17 @@ int DoubleVector::pop_back(){
 }
 
 void DoubleVector::push_front(int value){
+  if(this->m_tail <= 0) {
+    resize();
+  }
 
+  int new_index = -- m_head;
+  this->m_list[new_index] = value;
+
+  this->m_size ++;
 }
 
 int DoubleVector::pop_front(){
-
 }
 
 int DoubleVector::at(unsigned int index) {
@@ -69,7 +82,15 @@ int DoubleVector::at(unsigned int index) {
 }
 
 void DoubleVector::resize() {
-  
+  this->m_capacity >>= 1;
+
+  int * new_list = new int[this->m_capacity];
+  int new_head = (this->m_capacity - this->size() - 1) / 2;
+  int new_tail = this->m_capacity - this->m_head - 1;
+
+  for(int i = this->m_head, j = new_head; i <= this->m_tail; ++ i) {
+    new_list[j] = this->m_list[i];
+  }
 }
 
 
