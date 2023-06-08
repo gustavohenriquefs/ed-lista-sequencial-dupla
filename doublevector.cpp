@@ -12,7 +12,6 @@
 #include "doublevector.h"
 
 #define VERIF_OP_VALID(index) (index >= this->size() || !(this->empty()))
-
 #define SPACES_AVAILABLE_FRONT (this->m_head)
 #define SPACES_AVAILABLE_BACK (this->m_capacity - this->m_tail) 
 
@@ -25,7 +24,7 @@ DoubleVector::DoubleVector() {
 }
 
 DoubleVector::DoubleVector(int n){
-  this-> m_capacity = n;
+  this->m_capacity = n;
   this->m_list = new int[this->m_capacity];
   this->m_head = (n - 1) / 2;
   this->m_tail = (n - 1)  - this->m_head;
@@ -222,12 +221,22 @@ void DoubleVector::replaceAt(int value, unsigned int index) {
   this->m_list[index] = value;
 }
 
-void DoubleVector::insert(int value, unsigned int index){
+void DoubleVector::insert(int value, unsigned int index) {
+  if(this->size() == this->m_capacity) {
+    resize();
+  }
+
   if(!index) {
     this->push_front(value);
   }else if(index == this->size() - 1) {
     this->push_back(value);
+  } else if(SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK) {
+    for(int i = this->m_tail; i > index; -- i) {
+      this->replaceAt(this->at(i + 1), i);
+    }
   } else {
-    
+    for(int i = 0; i < index; ++ i) {
+      this->replaceAt(this->at(i), i + 1);
+    }
   }
 }

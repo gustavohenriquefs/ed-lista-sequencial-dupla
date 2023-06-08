@@ -87,11 +87,6 @@ class DoubleVector {
     // e o valor do k-ésimo elemento da primeira lista é igual ao k-ésimo elemento da segunda lista.
     bool equals(DoubleVector& lst);
 
-    /*Realiza o deslocamento completo, seja para a direita ou esquerda,
-    de acordo a descri¸c˜ao na Se¸c˜ao 1.1.1. Caso desejem, podem dividir em duas fun¸c˜oes
-    lef t shif t e right shif t.*/
-    void shift(); 
-
     void replaceAt(int value, unsigned int index);
 
     void insert(int value, unsigned int index);

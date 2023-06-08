@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "doublevector.h"
+#include "doublevector.cpp"
 
 void print(DoubleVector& list) {
     if(!list.empty()){
