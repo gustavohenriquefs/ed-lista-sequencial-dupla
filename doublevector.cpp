@@ -13,6 +13,9 @@
 
 #define VERIF_OP_VALID(index) (index >= this->size() || !(this->empty()))
 
+#define SPACES_AVAILABLE_FRONT (this->m_head)
+#define SPACES_AVAILABLE_BACK (this->m_capacity - this->m_tail) 
+
 DoubleVector::DoubleVector() {
   this->m_capacity = 16;
   this->m_list = new int[this->m_capacity];
@@ -42,24 +45,13 @@ int DoubleVector::size(){
   return this->m_size;
 }
 
-void DoubleVector::push_back(int value){
-  if(this->m_tail >= this->size()) {
-    resize();
-  }
-
-  int new_index = ++ m_tail;
-  this->m_list[new_index] = value;
-
-  this->m_size ++;
-}
-
-int DoubleVector::pop_back(){
-
-}
-
 void DoubleVector::push_front(int value){
-  if(this->m_tail <= 0) {
-    resize();
+  if(!SPACES_AVAILABLE_FRONT) {
+    if(SPACES_AVAILABLE_BACK) {
+      this->shift();
+    } else {
+      resize();
+    }
   }
 
   int new_index = -- m_head;
@@ -68,8 +60,48 @@ void DoubleVector::push_front(int value){
   this->m_size ++;
 }
 
-int DoubleVector::pop_front(){
+void DoubleVector::push_back(int value){
+  if(!SPACES_AVAILABLE_BACK) {
+    if(SPACES_AVAILABLE_FRONT) {
+      this->shift();
+    } else {
+      resize();
+    }
+  }
+
+  int new_index = ++ m_tail;
+  this->m_list[new_index] = value;
+
+  this->m_size ++;
 }
+
+int DoubleVector::pop_back() {
+  if(this->empty()) {
+    return -1;
+  }
+
+  int element_rmv = this->at(this->size() - 1);
+
+  this->m_size --;
+  this->m_tail --;
+
+  return element_rmv;
+}
+
+int DoubleVector::pop_front() {
+  if(this->empty()) {
+    return -1;
+  }
+
+  int element_rmv = this->at(0);
+
+  this->m_size --;
+  this->m_head ++;
+
+  return element_rmv;
+}
+
+
 
 int DoubleVector::at(unsigned int index) {
   if(VERIF_OP_VALID(index)) {
@@ -85,32 +117,69 @@ void DoubleVector::resize() {
   this->m_capacity >>= 1;
 
   int * new_list = new int[this->m_capacity];
+
   int new_head = (this->m_capacity - this->size() - 1) / 2;
   int new_tail = this->m_capacity - this->m_head - 1;
 
   for(int i = this->m_head, j = new_head; i <= this->m_tail; ++ i) {
     new_list[j] = this->m_list[i];
   }
+
+  delete[] this->m_list;
+  this->m_list = new_list;
+}
+
+void DoubleVector::shift() {
+  int mid = (m_head + m_tail)/2;
+  int * new_vector = new int[this->m_capacity];
+  int i = mid, j = mid - 1;
+  
+  int new_mid_i = (this->m_capacity - 1) / 2;
+  int new_mid_j = new_mid_i - 1;
+
+  while(i < this->m_tail or j > this->m_head) {
+    if(i < this->m_tail) {
+      new_vector[new_mid_i ++] = m_list[i ++];
+    }
+
+    if(j > this->m_head) {
+      new_vector[new_mid_j --] = m_list[j --];
+    }
+  }
+  
+  delete[] m_list;
+  m_list = new_vector;
 }
 
 
-// TODO: Verificar ponto 1.1.2 do pdf;
 void DoubleVector::remove(unsigned int index){
   if(VERIF_OP_VALID(index)){
     return;
   }
+
+  int * new_vector = new int[this-> m_capacity];
   
-  for(unsigned int i = index; i < this->size() - 1; ++ i){
-    replaceAt(this->at(i + 1), i);
+  if (SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK){
+    for(unsigned int i = 0; i <= index; ++ i){
+      new_vector[i] = this->at(i + 1);
+    }
+  } else {
+    for(unsigned int i = this->size() - 1; i >= index; -- i){
+      new_vector[i] = this->at(i - 1);
+    }
   }
 
-  pop_back();
+  delete[] this->m_list;
+  m_list = new_vector;
 }
 
 
-// TODO: Verificar ponto 1.1.2 do pdf;
 void DoubleVector::removeAll(int value){
-
+  for(unsigned int i = 0; i < this->size(); ++i){
+    if(this->at(i) == value){
+      remove(i --); 
+    }
+  }
 }
 
 void DoubleVector::print() {
@@ -120,7 +189,7 @@ void DoubleVector::print() {
 }
 
 void DoubleVector::printReverse(){
-  for(int i = this->size(); i >= 0; -- i) {
+  for(int i = this->size() - 1; i >= 0; -- i) {
     printf("%d ", this->at(i));  
   }
 }
@@ -154,6 +223,11 @@ void DoubleVector::replaceAt(int value, unsigned int index) {
 }
 
 void DoubleVector::insert(int value, unsigned int index){
-
+  if(!index) {
+    this->push_front(value);
+  }else if(index == this->size() - 1) {
+    this->push_back(value);
+  } else {
+    
+  }
 }
-

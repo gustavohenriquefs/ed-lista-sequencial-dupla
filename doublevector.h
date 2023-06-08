@@ -1,3 +1,13 @@
+/**
+ * @file doublevector.cpp
+ * @authors Luis Estevam Rosa Chaves (536699), Gustavo Henrique Freitas de Sousa (535735)
+ * @brief 
+ * @date 2023-06-08
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef DOUBLEVECTOR_H
 #define DOUBLEVECTOR_H
 
@@ -76,6 +86,11 @@ class DoubleVector {
     // Duas listas são iguais se elas possuem o mesmo tamanho
     // e o valor do k-ésimo elemento da primeira lista é igual ao k-ésimo elemento da segunda lista.
     bool equals(DoubleVector& lst);
+
+    /*Realiza o deslocamento completo, seja para a direita ou esquerda,
+    de acordo a descri¸c˜ao na Se¸c˜ao 1.1.1. Caso desejem, podem dividir em duas fun¸c˜oes
+    lef t shif t e right shif t.*/
+    void shift(); 
 
     void replaceAt(int value, unsigned int index);
 
