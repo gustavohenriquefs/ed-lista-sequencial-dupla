@@ -3,6 +3,7 @@
 
 class DoubleVector {
   private: 
+    int *m_list;
     int m_capacity;
     int m_size;
     int m_head;
@@ -41,7 +42,7 @@ class DoubleVector {
     // Retorna o elemento da lista de índice k (Cuidado, é o índice da
     // lista e não do vetor). A função verifica se k está dentro dos limites de elementos
     // válidos. Caso contrário, retorna -1. Obrigatoriamente deve ser O(1).
-    int at(int k);
+    int at(unsigned int index);
 
     // Realiza o deslocamento completo, seja para a direita ou esquerda,
     // de acordo a descrição na Seção 1.1.1.
@@ -54,7 +55,7 @@ class DoubleVector {
     // Remove o elemento de índice k da lista (Cuidado, é o índice
     // da lista e não do vetor) de acordo a descrição na Seção 1.1.2.
     // A ordem dos demais elementos da lista devem se manter.
-    void remove(__uint32_t index);
+    void remove(unsigned int index);
 
     // Remove da lista todas as ocorrências de value.
     // A ordem dos demais elementos da lista entre si devem se manter.
@@ -74,14 +75,12 @@ class DoubleVector {
     // Determina se a lista passada por parâmetro é igual à lista em questão.
     // Duas listas são iguais se elas possuem o mesmo tamanho
     // e o valor do k-ésimo elemento da primeira lista é igual ao k-ésimo elemento da segunda lista.
-    bool equal(DoubleVector& lst);
-
-    void replaceAt(int value, __uint32_t index);
-
-    void insert(int value, __uint32_t index);
-
     bool equals(DoubleVector& lst);
-};
 
+    void replaceAt(int value, unsigned int index);
+
+    void insert(int value, unsigned int index);
+
+};
 
 #endif
