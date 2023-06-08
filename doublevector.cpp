@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "doublevector.h"
 
-#define VERIF_OP_VALID(index) (index >= this->size() || !(this->empty()))
+#define VERIF_OP_VALID(index) (index >= this->size() or this->empty())
 #define SPACES_AVAILABLE_FRONT (this->m_head)
 #define SPACES_AVAILABLE_BACK (this->m_capacity - this->m_tail) 
 
