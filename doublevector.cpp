@@ -53,8 +53,7 @@ void DoubleVector::push_front(int value){
     }
   }
 
-  int new_index = -- m_head;
-  this->m_list[new_index] = value;
+  this->m_list[this->m_head --] = value;
 
   this->m_size ++;
 }
@@ -68,8 +67,7 @@ void DoubleVector::push_back(int value){
     }
   }
 
-  int new_index = ++ m_tail;
-  this->m_list[new_index] = value;
+  this->m_list[this->m_tail ++] = value;
 
   this->m_size ++;
 }
@@ -107,7 +105,7 @@ int DoubleVector::at(unsigned int index) {
     return -1;
   }
 
-  int idx_real = this->m_head + index;
+  int idx_real = this->m_head + index + 1;
   
   return this->m_list[idx_real];
 }
@@ -118,10 +116,11 @@ void DoubleVector::resize() {
   int * new_list = new int[this->m_capacity];
 
   int new_head = (this->m_capacity - this->size() - 1) / 2;
-  int new_tail = this->m_capacity - this->m_head - 1;
+  int new_tail = (this->m_capacity - this->m_head - 1);
+  int sz       =  this->size() / 2;
 
-  for(int i = this->m_head, j = new_head; i <= this->m_tail; ++ i) {
-    new_list[j] = this->m_list[i];
+  for(int i = new_head - sz + 1; i < new_tail + this->size() - sz; ++ i) {
+    new_list[i] = this->m_list[i];
   }
 
   delete[] this->m_list;
