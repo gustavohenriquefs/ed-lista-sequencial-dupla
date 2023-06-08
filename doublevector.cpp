@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "doublevector.h"
 
-#define VERIF_OP_VALID(index) (index >= this->size() or this->empty())
+#define VERIF_OP_VALID(index) ((int)index >= this->size() or this->empty())
 #define SPACES_AVAILABLE_FRONT (this->m_head)
 #define SPACES_AVAILABLE_BACK (this->m_capacity - this->m_tail) 
 
@@ -126,6 +126,7 @@ void DoubleVector::resize() {
 
   delete[] this->m_list;
   this->m_list = new_list;
+  this->m_tail = new_tail;
 }
 
 void DoubleVector::shift() {
@@ -174,7 +175,7 @@ void DoubleVector::remove(unsigned int index){
 
 
 void DoubleVector::removeAll(int value){
-  for(unsigned int i = 0; i < this->size(); ++i){
+  for(unsigned int i = 0; (int)i < this->size(); ++i){
     if(this->at(i) == value){
       remove(i --); 
     }
