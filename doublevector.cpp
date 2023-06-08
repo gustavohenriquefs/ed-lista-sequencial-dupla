@@ -23,24 +23,24 @@ DoubleVector::DoubleVector() {
   this->m_size = 0;
 }
 
-DoubleVector::DoubleVector(int n){
+DoubleVector::DoubleVector(int n) {
   this->m_capacity = n;
   this->m_list = new int[this->m_capacity];
-  this->m_head = (n - 1) / 2;
-  this->m_tail = (n - 1)  - this->m_head;
+  this->m_tail = n - 1 - ((n - 1) / 2);
+  this->m_head = this->m_tail - 1;
   this->m_size = 0;
 }
 
-DoubleVector::~DoubleVector(){
+DoubleVector::~DoubleVector() {
   if(!empty()) delete[] this->m_list;
 }
 
 
-bool DoubleVector::empty(){
+bool DoubleVector::empty() {
   return !(this->size());
 }
 
-int DoubleVector::size(){
+int DoubleVector::size() {
   return this->m_size;
 }
 
@@ -115,26 +115,29 @@ void DoubleVector::resize() {
 
   int * new_list = new int[this->m_capacity];
 
-  int new_head = (this->m_capacity - this->size() - 1) / 2;
-  int new_tail = (this->m_capacity - this->m_head - 1);
   int sz       =  this->size() / 2;
+  int new_head = (this->m_capacity - this->size()) / 2 - sz + 1;
+  int new_tail = (this->m_capacity - this->m_head - 1) + this->size()  - sz;
 
   for(int i = new_head - sz + 1; i < new_tail + this->size() - sz; ++ i) {
     new_list[i] = this->m_list[i];
   }
 
   delete[] this->m_list;
+
   this->m_list = new_list;
+
+  this->m_head = ++ new_head;
   this->m_tail = new_tail;
 }
 
 void DoubleVector::shift() {
-  int mid = (m_head + m_tail)/2;
+  int mid = (m_head + m_tail) / 2;
   int * new_vector = new int[this->m_capacity];
   int i = mid, j = mid - 1;
   
   int new_mid_i = (this->m_capacity - 1) / 2;
-  int new_mid_j = new_mid_i - 1;
+  int new_mid_j = (new_mid_i - 1);
 
   while(i < this->m_tail or j > this->m_head) {
     if(i < this->m_tail) {
