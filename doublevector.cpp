@@ -32,8 +32,9 @@ DoubleVector::DoubleVector(int n) {
 }
 
 DoubleVector::~DoubleVector() {
-  if(this->m_list != nullptr) 
+  if(this->m_list != nullptr) {
     delete[] this->m_list;
+  }
 }
 
 bool DoubleVector::empty() {
@@ -144,7 +145,7 @@ void DoubleVector::shift() {
   int new_head = cap_in_left - sz_in_left;
   int new_tail = sz_in_right + 1 + cap_in_left;
 
-  int * new_list = new int[this->m_capacity + 10]();
+  int * new_list = new int[this->m_capacity]();
 
   for (int i = new_head + 1, sz = 0; sz < this->size(); ++i, ++sz) {
     new_list[i] = this->at(sz);
