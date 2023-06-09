@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include "doublevector.h"
 
-#define VERIF_OP_VALID(index) ((int)index >= this->size() or this->empty())
-#define SPACES_AVAILABLE_FRONT (this->m_head)
+#define VERIF_OP_VALID(index) ((int)index >= this->size() || this->empty())
+#define SPACES_AVAILABLE_FRONT (this->m_head + 1)
 #define SPACES_AVAILABLE_BACK (this->m_capacity - this->m_tail) 
 
 DoubleVector::DoubleVector() {
@@ -32,12 +32,12 @@ DoubleVector::DoubleVector(int n) {
 }
 
 DoubleVector::~DoubleVector() {
-  if(!empty()) delete[] this->m_list;
+  if(this->m_list != nullptr) delete[] this->m_list;
 }
 
 
 bool DoubleVector::empty() {
-  return !(this->size());
+  return this->size() == 0;
 }
 
 int DoubleVector::size() {
@@ -45,11 +45,11 @@ int DoubleVector::size() {
 }
 
 void DoubleVector::push_front(int value){
-  if(!SPACES_AVAILABLE_FRONT) {
-    if(SPACES_AVAILABLE_BACK) {
+  if(SPACES_AVAILABLE_FRONT <= 0) {
+    if(SPACES_AVAILABLE_BACK > 0) {
       this->shift();
     } else {
-      resize();
+      this->resize();
     }
   }
 
@@ -59,16 +59,15 @@ void DoubleVector::push_front(int value){
 }
 
 void DoubleVector::push_back(int value){
-  if(!SPACES_AVAILABLE_BACK) {
-    if(SPACES_AVAILABLE_FRONT) {
+  if(SPACES_AVAILABLE_BACK <= 0) {
+    if(SPACES_AVAILABLE_FRONT > 0) {
       this->shift();
     } else {
-      resize();
+      this->resize();
     }
   }
 
   this->m_list[this->m_tail ++] = value;
-
   this->m_size ++;
 }
 
@@ -98,8 +97,6 @@ int DoubleVector::pop_front() {
   return element_rmv;
 }
 
-
-
 int DoubleVector::at(unsigned int index) {
   if(VERIF_OP_VALID(index)) {
     return -1;
@@ -111,48 +108,90 @@ int DoubleVector::at(unsigned int index) {
 }
 
 void DoubleVector::resize() {
-  this->m_capacity >>= 1;
+  this->m_capacity <<= 1;
+
+  int cap_in_left = (this->m_capacity / 2);
+  int sz_in_left  = ((this->size() + 1)/2);
+
+  int cap_in_right = ((this->m_capacity)/ 2);
+  int sz_in_right  = (this->size()/2);
+
+  int new_head =  cap_in_left  - sz_in_left;
+  int new_tail =  sz_in_right + 1 + cap_in_left;
 
   int * new_list = new int[this->m_capacity];
 
-  int sz       =  this->size() / 2;
-  int new_head = (this->m_capacity - this->size()) / 2 - sz + 1;
-  int new_tail = (this->m_capacity - this->m_head - 1) + this->size()  - sz;
-
-  for(int i = new_head - sz + 1; i < new_tail + this->size() - sz; ++ i) {
-    new_list[i] = this->m_list[i];
+  for(int i = new_head + 1, sz = 0; sz < this->size(); ++ i, ++ sz) {
+    new_list[i] = this->at(sz);
   }
 
-  delete[] this->m_list;
+  if (this->m_list != nullptr)
+    delete[] this->m_list;
 
   this->m_list = new_list;
 
-  this->m_head = ++ new_head;
+  this->m_head = new_head;
   this->m_tail = new_tail;
+
+  for(int i = 0; i < this->size(); ++ i) {
+    printf("%d - " , this->at(i));
+  }
+
+  printf("\n");
 }
 
 void DoubleVector::shift() {
-  int mid = (m_head + m_tail) / 2;
-  int * new_vector = new int[this->m_capacity];
-  int i = mid, j = mid - 1;
-  
-  int new_mid_i = (this->m_capacity - 1) / 2;
-  int new_mid_j = (new_mid_i - 1);
+  int cap_in_left = (this->m_capacity / 2);
+  int sz_in_left = ((this->size() + 1) / 2);
 
-  while(i < this->m_tail or j > this->m_head) {
-    if(i < this->m_tail) {
-      new_vector[new_mid_i ++] = m_list[i ++];
-    }
+  int cap_in_right = ((this->m_capacity) / 2);
+  int sz_in_right = (this->size() / 2);
 
-    if(j > this->m_head) {
-      new_vector[new_mid_j --] = m_list[j --];
-    }
+  int new_head = cap_in_left - sz_in_left;
+  int new_tail = sz_in_right + 1 + cap_in_left;
+
+  int * new_list = new int[this->m_capacity + 1];
+
+  for (int i = new_head + 1, sz = 0; sz < this->size(); ++i, ++sz) {
+    new_list[i] = this->at(sz);
   }
-  
-  delete[] m_list;
-  m_list = new_vector;
+
+  // delete[] this->m_list;
+
+  this->m_head = new_head;
+  this->m_tail = new_tail;
+
+
+  this->m_list = new_list;
+
+
+  for (int i = 0; i < this->size(); ++i) {
+    printf("%d - ", this->at(i));
+  }
+
+  printf("\n");
 }
 
+
+/* void double_vector::removeAt(int k) {
+    if(k <= this->head || k >= this->tail || this->empty()){
+        return;
+    }
+
+    if (this->head + 1 > this->m_capacity - this->tail) {
+        for (int i = k; i < this->tail - 1 ; ++i){
+            this->list[i] = this->list[i + 1];
+        }
+        this->tail--;
+    }else{
+        for (int i = k; i > this->head + 1; --i){
+            this->list[i] = this->list[i - 1];
+        }
+        this->head++;
+    }
+
+    this->m_size--;
+}; */
 
 void DoubleVector::remove(unsigned int index){
   if(VERIF_OP_VALID(index)){
@@ -162,24 +201,27 @@ void DoubleVector::remove(unsigned int index){
   int * new_vector = new int[this-> m_capacity];
   
   if (SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK){
-    for(unsigned int i = 0; i <= index; ++ i){
-      new_vector[i] = this->at(i + 1);
+    for(unsigned int i = index; i > this->m_head + 1; -- i) {
+      new_vector[i] = m_list[i - 1];
     }
+    ++ this->m_head; 
   } else {
-    for(unsigned int i = this->size() - 1; i >= index; -- i){
-      new_vector[i] = this->at(i - 1);
+     for(unsigned int i = index; i < this->m_tail -1; ++ i) {
+      new_vector[i] = m_list[i + 1];
     }
+    -- this->m_tail;
   }
 
   delete[] this->m_list;
-  m_list = new_vector;
+  this->m_list = new_vector;
+  -- m_size ;
 }
 
-
 void DoubleVector::removeAll(int value){
-  for(unsigned int i = 0; (int)i < this->size(); ++i){
+  for(unsigned int i = 0; i < this->size(); ++i){
     if(this->at(i) == value){
-      remove(i --); 
+      remove(i);
+      i--;
     }
   }
 }
@@ -217,11 +259,13 @@ bool DoubleVector::equals(DoubleVector& lst){
 }
 
 void DoubleVector::replaceAt(int value, unsigned int index) {
-  if(VERIF_OP_VALID(index)) {
+   int idx_real = this->m_head + index + 1;
+
+  if(VERIF_OP_VALID(idx_real)) {
     return;
   }
   
-  this->m_list[index] = value;
+  this->m_list[idx_real] = value;
 }
 
 void DoubleVector::insert(int value, unsigned int index) {
@@ -229,17 +273,23 @@ void DoubleVector::insert(int value, unsigned int index) {
     resize();
   }
 
-  if(!index) {
+  if(index == 0) {
     this->push_front(value);
-  }else if(index == this->size() - 1) {
+  } else if(index == this->size()) {
     this->push_back(value);
   } else if(SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK) {
-    for(int i = this->m_tail; i > index; -- i) {
-      this->replaceAt(this->at(i + 1), i);
+    this->m_head--;
+    for(int i = this->m_head + 1; i <= index + this->m_head; ++i) {
+      this->m_list[i] = this->m_list[i + 1];
     }
+    this->m_list[index + this->m_head] = value;
+    this->m_size++;
   } else {
-    for(int i = 0; i < index; ++ i) {
-      this->replaceAt(this->at(i), i + 1);
+    for(int i = this->m_tail; i >= index + this->m_head + 1; --i) {
+      this->m_list[i] = this->m_list[i - 1];
     }
+    this->m_tail++;
+    this->m_list[index + this->m_head + 1] = value;
+    this->m_size++;
   }
 }
