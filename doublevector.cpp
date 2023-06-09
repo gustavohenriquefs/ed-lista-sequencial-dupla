@@ -132,12 +132,6 @@ void DoubleVector::resize() {
 
   this->m_head = new_head;
   this->m_tail = new_tail;
-
-  for(int i = 0; i < this->size(); ++ i) {
-    printf("%d - " , this->at(i));
-  }
-
-  printf("\n");
 }
 
 void DoubleVector::shift() {
@@ -156,66 +150,40 @@ void DoubleVector::shift() {
     new_list[i] = this->at(sz);
   }
 
-  // delete[] this->m_list;
+  delete[] this->m_list;
 
   this->m_head = new_head;
   this->m_tail = new_tail;
 
 
   this->m_list = new_list;
-
-
-  for (int i = 0; i < this->size(); ++i) {
-    printf("%d - ", this->at(i));
-  }
-
-  printf("\n");
 }
 
 
 /* void double_vector::removeAt(int k) {
-    if(k <= this->head || k >= this->tail || this->empty()){
-        return;
+    if(k >= this->m_capacity/2) {
+        for(int i = m_head+1+k; i+1 != m_tail; i++) m_list[i] = m_list[i+1];
+        m_tail--; 
+    } else {
+        for(int i = m_head+1+k; i-1 != m_head; i--) m_list[i] = m_list[i-1];
+        m_head++;
     }
-
-    if (this->head + 1 > this->m_capacity - this->tail) {
-        for (int i = k; i < this->tail - 1 ; ++i){
-            this->list[i] = this->list[i + 1];
-        }
-        this->tail--;
-    }else{
-        for (int i = k; i > this->head + 1; --i){
-            this->list[i] = this->list[i - 1];
-        }
-        this->head++;
-    }
-
-    this->m_size--;
+    m_size--;
 }; */
-
-void DoubleVector::remove(unsigned int index){
-  if(VERIF_OP_VALID(index)){
-    return;
-  }
-
-  int * new_vector = new int[this-> m_capacity];
-  
-  if (SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK){
-    for(unsigned int i = index; i > this->m_head + 1; -- i) {
-      new_vector[i] = m_list[i - 1];
-    }
-    ++ this->m_head; 
-  } else {
-     for(unsigned int i = index; i < this->m_tail -1; ++ i) {
-      new_vector[i] = m_list[i + 1];
+void DoubleVector::remove(unsigned int index) {
+  if(SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK) {
+    for(int idx_real = this->m_head + index + 1; idx_real <= this->m_tail - 2; ++ idx_real) {
+      this->m_list[idx_real] = this->m_list[idx_real + 1]; 
     }
     -- this->m_tail;
+  } else {
+    for(int idx_real = this->m_head + index + 1; idx_real >= this->m_head - 2; -- idx_real) {
+      this->m_list[idx_real] = this->m_list[idx_real - 1]; 
+    }
+    ++ m_head;
   }
-
-  delete[] this->m_list;
-  this->m_list = new_vector;
-  -- m_size ;
-}
+  -- m_size;
+};
 
 void DoubleVector::removeAll(int value){
   for(unsigned int i = 0; i < this->size(); ++i){

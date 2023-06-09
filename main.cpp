@@ -6,7 +6,7 @@ void print(DoubleVector& list) {
         printf("%d\n", list.size());
     	for(int i = 0; i < list.size(); i++) printf("%d ", list.at(i));
     	printf("\n");
-    }else printf("Lista Vazia\n");
+    } else printf("Lista Vazia\n");
 }
 void remove(DoubleVector& list) {
     if(!list.empty()){
@@ -48,7 +48,7 @@ int main() {
 	print(listaPares);
 	print(listaImpares);
 
-	printf("Testa o construtor com parametro n\n");
+ 	printf("Testa o construtor com parametro n\n");
 	DoubleVector listaSomentePar(listaPares.size()), listaSomenteImpar(listaImpares.size());
 	copy(listaPares, listaSomentePar);
 	copy(listaImpares, listaSomenteImpar);
@@ -70,11 +70,13 @@ int main() {
 	print(listaSomenteImpar);
 
 	printf("Testa a funcao removeAt\n");
+	
 	if(listaSomentePar.size() > 10){
 	    int index;
 	    scanf("%d", &index);
 	    listaSomentePar.remove(index);
 	}
+
 	if(listaSomenteImpar.size() > 10){
 	    int index;
 	    scanf("%d", &index);
@@ -128,7 +130,7 @@ int main() {
 	}
 	print(listaSomentePar);
 	print(listaSomenteImpar);
-
+ 
 	printf("Testa a funcao concat\n");
 	DoubleVector listaConcat1(listaSomenteImpar.size());
 	copy(listaSomenteImpar, listaConcat1);
