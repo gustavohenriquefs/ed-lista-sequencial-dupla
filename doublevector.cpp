@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "doublevector.h"
 
-#define VERIF_OP_VALID(index) ((int)index >= this->size() || this->empty())
+#define VERIF_OP_N_VALID(idx) ( idx >= this->m_tail || idx <= this->m_head || this->empty())
 #define SPACES_AVAILABLE_FRONT (this->m_head + 1)
 #define SPACES_AVAILABLE_BACK (this->m_capacity - this->m_tail) 
 
@@ -32,9 +32,9 @@ DoubleVector::DoubleVector(int n) {
 }
 
 DoubleVector::~DoubleVector() {
-  if(this->m_list != nullptr) delete[] this->m_list;
+  if(this->m_list != nullptr) 
+    delete[] this->m_list;
 }
-
 
 bool DoubleVector::empty() {
   return this->size() == 0;
@@ -59,7 +59,7 @@ void DoubleVector::push_front(int value){
 }
 
 void DoubleVector::push_back(int value){
-  if(SPACES_AVAILABLE_BACK <= 0) {
+   if(SPACES_AVAILABLE_BACK <= 0) {
     if(SPACES_AVAILABLE_FRONT > 0) {
       this->shift();
     } else {
@@ -98,11 +98,11 @@ int DoubleVector::pop_front() {
 }
 
 int DoubleVector::at(unsigned int index) {
-  if(VERIF_OP_VALID(index)) {
+  int idx_real = this->m_head + index + 1;
+  
+  if(VERIF_OP_N_VALID(idx_real)) {
     return -1;
   }
-
-  int idx_real = this->m_head + index + 1;
   
   return this->m_list[idx_real];
 }
@@ -119,7 +119,7 @@ void DoubleVector::resize() {
   int new_head =  cap_in_left  - sz_in_left;
   int new_tail =  sz_in_right + 1 + cap_in_left;
 
-  int * new_list = new int[this->m_capacity];
+  int * new_list = new int[this->m_capacity]();
 
   for(int i = new_head + 1, sz = 0; sz < this->size(); ++ i, ++ sz) {
     new_list[i] = this->at(sz);
@@ -144,7 +144,7 @@ void DoubleVector::shift() {
   int new_head = cap_in_left - sz_in_left;
   int new_tail = sz_in_right + 1 + cap_in_left;
 
-  int * new_list = new int[this->m_capacity + 1];
+  int * new_list = new int[this->m_capacity + 10]();
 
   for (int i = new_head + 1, sz = 0; sz < this->size(); ++i, ++sz) {
     new_list[i] = this->at(sz);
@@ -219,12 +219,12 @@ bool DoubleVector::equals(DoubleVector& lst){
 }
 
 void DoubleVector::replaceAt(int value, unsigned int index) {
-   int idx_real = this->m_head + index + 1;
+  int idx_real = this->m_head + index + 1;
 
-  if(VERIF_OP_VALID(idx_real)) {
+   if(VERIF_OP_N_VALID(idx_real)) {
     return;
   }
-  
+
   this->m_list[idx_real] = value;
 }
 
@@ -236,7 +236,7 @@ void DoubleVector::insert(int value, unsigned int index) {
   if(index == 0) {
     this->push_front(value);
   } else if(index == this->size()) {
-    this->push_back(value);
+    this->push_back(value); 
   } else if(SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK) {
     this->m_head--;
     for(int i = this->m_head + 1; i <= index + this->m_head; ++i) {
