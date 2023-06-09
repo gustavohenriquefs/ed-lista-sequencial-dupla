@@ -1,0 +1,57 @@
+Testa o construtor default, funcoes push_back e at
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa a funcao pop_back
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa o construtor com parametro n
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa a funcao replaceAt
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa a funcao removeAt
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa a funcao insert
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa a funcao removeAll
+3
+18 20 6 
+7
+35 1 25 29 9 13 15 
+Testa a funcao push_front
+5
+66 2 18 20 6 
+9
+28 42 35 1 25 29 9 13 15 
+Testa a funcao concat
+14
+28 42 35 1 25 29 9 13 15 66 2 18 20 6 
+14
+66 2 18 20 6 28 42 35 1 25 29 9 13 15 
+5
+66 2 18 20 6 
+9
+28 42 35 1 25 29 9 13 15 
+Testa a funcao equals
+0
+1
+Testa a funcao equals
+0
+Testa a funcao pop_back e pop_front
+6 66 20 2 18 
+15 28 13 42 9 35 29 1 25 

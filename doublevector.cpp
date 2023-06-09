@@ -159,39 +159,31 @@ void DoubleVector::shift() {
   this->m_list = new_list;
 }
 
-
-/* void double_vector::removeAt(int k) {
-    if(k >= this->m_capacity/2) {
-        for(int i = m_head+1+k; i+1 != m_tail; i++) m_list[i] = m_list[i+1];
-        m_tail--; 
-    } else {
-        for(int i = m_head+1+k; i-1 != m_head; i--) m_list[i] = m_list[i-1];
-        m_head++;
-    }
-    m_size--;
-}; */
 void DoubleVector::remove(unsigned int index) {
-  if(SPACES_AVAILABLE_FRONT < SPACES_AVAILABLE_BACK) {
-    for(int idx_real = this->m_head + index + 1; idx_real <= this->m_tail - 2; ++ idx_real) {
+  if(index > this->m_capacity / 2) {
+    for(int idx_real = this->m_head + index + 1; idx_real + 1 != this->m_tail; ++ idx_real) {
       this->m_list[idx_real] = this->m_list[idx_real + 1]; 
     }
+
     -- this->m_tail;
   } else {
-    for(int idx_real = this->m_head + index + 1; idx_real >= this->m_head - 2; -- idx_real) {
+    for(int idx_real = this->m_head + index + 1; idx_real - 1 != this->m_head ; -- idx_real) {
       this->m_list[idx_real] = this->m_list[idx_real - 1]; 
     }
-    ++ m_head;
+    
+    ++ this->m_head;
   }
-  -- m_size;
+
+  -- this->m_size;
 };
 
-void DoubleVector::removeAll(int value){
-  for(unsigned int i = 0; i < this->size(); ++i){
-    if(this->at(i) == value){
-      remove(i);
-      i--;
+void DoubleVector::removeAll(int value) {
+    for(int i = 0; i < size(); i++) {
+        if(at(i) == value) {
+            remove(i);
+            i--;
+        }
     }
-  }
 }
 
 void DoubleVector::print() {
